@@ -123,6 +123,8 @@ p {
   font-size: 3rem;
   margin-top: 0;
   color: var(--action-color);
+  animation: blip 2s infinite;
+  animation-direction: alternate;
 }
 
 .clock {
@@ -133,10 +135,12 @@ p {
 
 .clock-number {
   font-size: 2.8rem;
+  filter: drop-shadow(1px 1px 6px);
 }
 
 .clock-text {
   font-size: 1.5rem;
+  filter: drop-shadow(1px 1px 6px);
 }
 
 .double-dot {
@@ -172,4 +176,14 @@ p {
     transform: rotateY(360deg);
   }
 }
+
+@keyframes blip {
+  0% {
+    filter: drop-shadow(0 0 0);
+  }
+  100% {
+    filter: drop-shadow(1px 1px 6px);
+  }
+}
+
 </style>
