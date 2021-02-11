@@ -27,7 +27,10 @@
     </section>
     <section class="analog-clock-container">
       <div class="analog-clock">
-        <p class="letras">Relog</p>
+        <div class="hour" :style="`transform: rotate(${rotateHours}deg)`"></div>
+        <div class="min" :style="`transform: rotate(${rotateMinutes}deg)`"></div>
+        <div class="sec" :style="`transform: rotate(${rotateSeconds}deg)`" ></div>
+        <div class="point"></div>
       </div>
     </section>
   </div>
@@ -42,6 +45,9 @@ export default {
       displayHours: 10,
       displayMinutes: 10,
       displaySeconds: 10,
+      rotateSeconds: 0,
+      rotateMinutes: 0,
+      rotateHours: 0,
     };
   },
   computed: {
@@ -60,10 +66,19 @@ export default {
   },
   mounted () {
     this.showRemaining();
+    this.showClock();
   },
   methods: {
     formatNum(num) {
       return num < 10 ? '0' + num : num
+    },
+    showClock() {
+      const time = setInterval(()=>{
+        const clock = new Date()
+        this.rotateSeconds = clock.getSeconds() * 6
+        this.rotateMinutes = clock.getMinutes() * 6
+        this.rotateHours = clock.getHours() * 12
+      }, 1000)
     },
     showRemaining() {
       const timer = setInterval(() => {
@@ -85,10 +100,14 @@ export default {
         // this.displaySeconds = secondsRes < 10 ? '0' + secondsRes : secondsRes
         // this.displayHours = hoursRes < 10 ? '0' + hoursRes : hoursRes
         // this.displayDays = daysRes < 10 ? '0' + daysRes : daysRes
-        this.displayMinutes = this.formatNum(minutesRes)
         this.displaySeconds = this.formatNum(secondsRes)
+        this.displayMinutes = this.formatNum(minutesRes)
         this.displayHours = this.formatNum(hoursRes)
         this.displayDays = this.formatNum(daysRes)
+
+        // this.rotateSeconds = this.displaySeconds * -6
+        // this.rotateMinutes = this.displayMinutes * -6
+        // this.rotateHours = (this.displayHours * -12) 
       }, 1000)
     }
   },
@@ -158,10 +177,52 @@ p {
   width: 150px;
   height: 150px;
   background-color: var(--text-color);
+  border: 8px solid black;
+  background-image: radial-gradient(var(--text-color), var(--secondary-color));
   border-radius: 50%;
-  transform: rotateY(0deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* transform: rotateY(0deg);
   animation: clock 5s infinite;
-  animation-direction: alternate;
+  animation-direction: alternate; */
+}
+
+.hour,
+.min,
+.sec {
+  position: absolute;
+  border-radius: 5px;
+  transform-origin: bottom;
+}
+
+.hour {
+  background-color: var(--action-color);
+  height: 50px;
+  width: 5px;
+  bottom: 210px;
+}
+
+.min {
+  background-color: var(--action-color);
+  height: 70px;
+  width: 5px;
+  bottom: 210px;
+}
+
+.sec {
+  background-color: var(--support-color);
+  height: 70px;
+  width: 2px;
+  bottom: 210px;
+}
+
+.point {
+  position: absolute;
+  background-color: black;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
 }
 
 .letras {
@@ -183,6 +244,20 @@ p {
   }
   100% {
     filter: drop-shadow(1px 1px 6px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .hour {
+    bottom: 130px;
+  }
+
+  .min {
+    bottom: 130px;
+  }
+
+  .sec {
+    bottom: 130px;
   }
 }
 
